@@ -1,14 +1,31 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../../shared/Navbar/Navbar";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../provider/AuthProvider";
 
 const Login = () => {
-
+  const location=useLocation();
+  const {signIn} = useContext(AuthContext);
+  const [error, setError]=useState('');
+  const navigate = useNavigate();
     const handleForm=e=>{
         e.preventDefault()
         const email = e.target.email.value;
         const password = e.target.password.value;
-        e.target.reset();
+        setError('');
         // console.log(email,password);
+        signIn(email,password)
+        .then(()=>{
+          // console.log('Succesfully Logged in');
+          e.target.reset();
+          {
+            location?.state? navigate(location.state):navigate('/')
+          }
+          
+        })
+        .catch((err)=>{
+          setError(err.message);
+        })
         
 
     }
@@ -28,7 +45,6 @@ const Login = () => {
                 <input
                   type="email"
                   name="email"
-                  id=""
                   className="block w-full p-3 rounded-lg"
                   required
                   placeholder="write your email"
@@ -40,7 +56,6 @@ const Login = () => {
                   className="w-full p-3 rounded-lg"
                   type="password"
                   name="password"
-                  id=""
                   required
                   placeholder="write your password"
                 />
@@ -56,6 +71,11 @@ const Login = () => {
             Do not Have an Account? Please 
             <Link to="/register" className="text-blue-600"> Register
             </Link>
+          </h1>
+          <h1>
+            {
+              error && <p className="text-red-500 mt-5 text-center">Something Wrong! Please Try Again.</p>
+            }
           </h1>
         </div>
       </div>

@@ -7,6 +7,7 @@ import Error from "../pages/Error/Error";
 import NewsDetails from "../pages/NewsDetails/NewsDetails";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
+import PrivateRouter from "../PrivateRouter/PrivateRouter";
 
 export const router = createBrowserRouter([
     {
@@ -29,7 +30,7 @@ export const router = createBrowserRouter([
             },
             {
                 path:'/news/:id',
-                element:<NewsDetails></NewsDetails>,
+                element:<PrivateRouter><NewsDetails></NewsDetails></PrivateRouter>,
                 loader:()=>fetch('/news.json')
             },
             {

@@ -1,15 +1,31 @@
 import { Link } from "react-router-dom";
 import Navbar from "../../shared/Navbar/Navbar";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../provider/AuthProvider";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
+    const [error, setError]=useState('');
+    const {signUp}  = useContext(AuthContext);
   const handleForm = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-    const name = e.target.name.value;
-    const url = e.target.url.value;
-    e.target.reset();
-    // console.log(name, url, email, password);
+    // const name = e.target.name.value;
+    // const url = e.target.url.value;
+    
+    setError('');
+    signUp(email,password)
+    .then(()=>{
+        toast("Succesfully Created Account");
+        e.target.reset();
+    })
+    .catch((err)=>{
+      console.error(err.message);
+        setError(err.message)
+    })
+    
   };
   return (
     <div className="">
@@ -29,7 +45,6 @@ const Register = () => {
                 <input
                   type="text"
                   name="name"
-                  id=""
                   className="block w-full p-3 rounded-lg"
                   required
                   placeholder="write your name"
@@ -42,7 +57,6 @@ const Register = () => {
                 <input
                   type="text"
                   name="url"
-                  id=""
                   className="block w-full p-3 rounded-lg"
                   required
                   placeholder="provide your photo url"
@@ -55,7 +69,6 @@ const Register = () => {
                 <input
                   type="email"
                   name="email"
-                  id=""
                   className="block w-full p-3 rounded-lg"
                   required
                   placeholder="write your email"
@@ -67,7 +80,6 @@ const Register = () => {
                   className="w-full p-3 rounded-lg"
                   type="password"
                   name="password"
-                  id=""
                   required
                   placeholder="write your password"
                 />
@@ -86,8 +98,14 @@ const Register = () => {
               Login
             </Link>
           </h1>
+          <h1 className="text-red-600 text-center mt-5">
+            {
+                error && <p>{error}</p>
+            }
+          </h1>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };
